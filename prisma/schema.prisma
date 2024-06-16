@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+  output = "../src/models/zod"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+enum Classification {
+  PersonName
+  PersonAddress
+  PersonPhoneNumber
+  SSN
+  PeronEmail
+  IPAddress
+}
+
+enum ConfidenceScore {
+  High
+  Medium
+  Low
+}
+
+enum ScanStatusType {
+  InProgress
+  Completed
+  Failed
+
+}
+
+model Column {
+  id          Int @id @default(autoincrement())
+  name        String
+  tableName   String
+  datasetId   String
+  classifications ColumnClassification[]
+}
+
+model ColumnClassification {
+  id               Int @id @default(autoincrement())
+  columnId         Int
+  column           Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  classification   Classification
+  confidenceScore  ConfidenceScore
+  PolicyTagDecision PolicyTagDecision[]
+}
+
+model PolicyTagDecision {
+  id                Int @id @default(autoincrement())
+  columnId          Int
+  decision          Boolean
+  decisionTimestamp DateTime @default(now())
+  ColumnClassification ColumnClassification @relation(fields: [columnId], references: [id], onDelete: Cascade)
+}
+
+model ScanStatus {
+  id          Int @id @default(autoincrement())
+  status      ScanStatusType
+  scanStart   DateTime @default(now())
+  scanEnd     DateTime?
+}
