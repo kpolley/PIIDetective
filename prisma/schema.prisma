@@ -22,7 +22,7 @@ enum Classification {
   PersonAddress
   PersonPhoneNumber
   SSN
-  PeronEmail
+  PersonEmail
   IPAddress
 }
 
