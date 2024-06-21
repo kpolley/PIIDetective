@@ -11,7 +11,9 @@ Data masking is an extremely powerful and user-friendly way to protect sensitive
 GCP has a Sensitive Data Protection service which promises similar functionality, but it [can become extremely costly](https://cloud.google.com/sensitive-data-protection/pricing#risk_analysis) since it scans the actual contents of the table, not just the table metadata. For comparison, using BigQuery PII Detective you can scan 2000+ tables for less than $5 of OpenAI credits. 
 
 ## Demo
-https://github.com/kpolley/BigQueryPIIDetector/assets/13952270/b7395cb9-3bfa-4d1f-ae16-5b41abe7462c
+https://github.com/kpolley/PIIDetective/assets/13952270/c41d4b8b-c66a-42e1-a89f-f96db4c87b72
+
+
 
 
 
