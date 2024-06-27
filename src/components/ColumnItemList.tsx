@@ -6,7 +6,6 @@ import { useColumn } from "@/context/ColumnProvider";
 
 export default function ColumnItemList() {  
     const { columns } = useColumn();
-    console.log(columns);
     return(
       <div>
         <h2 className="text-xl font-bold mb-4">New Findings</h2>

@@ -26,7 +26,7 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
 
-export const ClassificationSchema = z.enum(['PersonName','PersonAddress','PersonPhoneNumber','SSN','PeronEmail','IPAddress']);
+export const ClassificationSchema = z.enum(['PersonName','PersonAddress','PersonPhoneNumber','SSN','PersonEmail','IPAddress']);
 
 export type ClassificationType = `${z.infer<typeof ClassificationSchema>}`
 

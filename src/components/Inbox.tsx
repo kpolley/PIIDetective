@@ -19,8 +19,6 @@ export default function Inbox() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  console.log(window.innerWidth)
-
   // if window width is less than 768px, return mobile view
   if(window.innerWidth < 768) {
     if (selectedItem) {
