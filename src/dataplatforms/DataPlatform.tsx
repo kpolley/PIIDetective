@@ -9,7 +9,7 @@ const TableData = z.object({
 
 export type TableDataType = z.infer<typeof TableData>;
 
-export type DataPlatformType = 'bigquery'; // Add more platforms as needed
+export type DataPlatformType = 'bigquery' | 'snowflake'; // Add more platforms as needed
 
 export abstract class DataPlatform {
     private static instance: DataPlatform;
@@ -20,6 +20,10 @@ export abstract class DataPlatform {
                 case 'bigquery':
                     const { BigQueryPlatform } = require('./BigQuery');
                     DataPlatform.instance = new BigQueryPlatform();
+                    break;
+                case 'snowflake':
+                    const { SnowflakePlatform } = require('./Snowflake');
+                    DataPlatform.instance = new SnowflakePlatform();
                     break;
                 default:
                     throw new Error('Unsupported data platform');

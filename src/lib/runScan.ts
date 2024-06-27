@@ -81,7 +81,6 @@ async function isAlreadyProcessed(tableName: string, datasetId: string): Promise
 export async function runScan() {
     const dataPlatform = DataPlatform.getInstance();
     const datasets: string[] = await dataPlatform.getDatasets();
-
     for (const datasetId of datasets) {
         if (
             !datasetId || 
