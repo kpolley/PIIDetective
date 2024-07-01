@@ -44,4 +44,4 @@ This application uses Postgres to keep track of detected columns and other vario
 Check out `.env.example` to see the sample config. If running locally, these can be stored in `.env.local`
 
 ## Run!
-run `npm run dev` to start the application and visit `http://localhost:3000` to view the UI. 
+run `npm run dev` to start the application and visit `http://localhost:3000` to view the UI and start detecting and preventing PII!
