@@ -10,11 +10,16 @@ Dynamic Data Masking is an extremely powerful and user-friendly way to protect s
 
 For example, GCP has a Sensitive Data Protection service which promises similar functionality, but it [can become extremely costly](https://cloud.google.com/sensitive-data-protection/pricing#risk_analysis) since it runs hundreds of regex queries on the entire contents of the table. For comparison, PII Detective only uses table metadata such as table and columns names, so you can detect PII in thousands of tables for less than $5 of OpenAI credits!
 
-![Price Comparison](public/price_comparison.jpeg)
-
+<!-- ![Price Comparison](public/price_comparison.jpeg) -->
+<div align="center">
+    <img src="public/price_comparison.jpeg" width="500">
+</div>
 Despite its relatively simple approach, PII Detective performs exceptionally well. LLMs are able to make human-level assumptions and context reasoning that were previously impossible to automate. 
 
-![PII Detection Comparison](public/pii_detection_example.jpeg)
+<!-- ![PII Detection Comparison](public/pii_detection_example.jpeg | width=100) -->
+<div align="center">
+    <img src="public/pii_detection_example.jpeg" width="500">
+</div>
 
 ## Demo
 https://github.com/kpolley/PIIDetective/assets/13952270/c41d4b8b-c66a-42e1-a89f-f96db4c87b72
