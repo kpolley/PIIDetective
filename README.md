@@ -6,9 +6,20 @@ PII Detective is a web application designed to identify, classify, and protect P
 ![Diagram](public/diagram.png)
 
 ## Why?
-Dynamic Data Masking is an extremely powerful and user-friendly way to protect sensitive such as PII. SHA256 encryption lets data scientists interact with PII data (filtering, aggregations, relational JOINs, etc.) without having to view the raw PII data. Data platforms such as BigQuery and Snowflake have very easy way to set up data masking, however, knowing _where_ PII columns are can be a massive challenge, especially if BigQuery is used heavily across multiple functions in your organization. 
+Dynamic Data Masking is an extremely powerful and user-friendly way to protect sensitive data such as PII. SHA256 encryption lets data scientists interact with PII data (filtering, aggregations, relational JOINs, etc.) without having to view the raw PII data. Data platforms such as BigQuery and Snowflake have very easy way to set up data masking, however, knowing _where_ PII columns are can be a massive challenge, especially if the platform is used heavily across multiple functions in your organization. 
 
-For example, GCP has a Sensitive Data Protection service which promises similar functionality, but it [can become extremely costly](https://cloud.google.com/sensitive-data-protection/pricing#risk_analysis) since it scans the actual contents of the table, not just the table metadata. For comparison, using BigQuery PII Detective you can scan 2000+ tables for less than $5 of OpenAI credits!
+For example, GCP has a Sensitive Data Protection service which promises similar functionality, but it [can become extremely costly](https://cloud.google.com/sensitive-data-protection/pricing#risk_analysis) since it runs hundreds of regex queries on the entire contents of the table. For comparison, PII Detective only uses table metadata such as table and columns names, so you can detect PII in thousands of tables for less than $5 of OpenAI credits!
+
+<!-- ![Price Comparison](public/price_comparison.jpeg) -->
+<div align="center">
+    <img src="public/price_comparison.jpeg" width="500">
+</div>
+Despite its relatively simple approach, PII Detective performs exceptionally well. LLMs are able to make human-level assumptions and context reasoning that were previously impossible to automate. 
+
+<!-- ![PII Detection Comparison](public/pii_detection_example.jpeg | width=100) -->
+<div align="center">
+    <img src="public/pii_detection_example.jpeg" width="500">
+</div>
 
 ## Demo
 https://github.com/kpolley/PIIDetective/assets/13952270/c41d4b8b-c66a-42e1-a89f-f96db4c87b72
@@ -33,4 +44,4 @@ This application uses Postgres to keep track of detected columns and other vario
 Check out `.env.example` to see the sample config. If running locally, these can be stored in `.env.local`
 
 ## Run!
-run `npm run dev` to start the application and visit `http://localhost:3000` to view the UI. 
+run `npm run dev` to start the application and visit `http://localhost:3000` to view the UI and start detecting and preventing PII!
