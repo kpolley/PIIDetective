@@ -14,7 +14,7 @@
     "@google-cloud/bigquery": "^7.7.1",
     "@langchain/core": "^0.2.5",
     "@langchain/google-vertexai": "^0.0.17",
-    "@langchain/google-vertexai-web": "^0.0.17",
+    "@langchain/google-vertexai-web": "^0.0.18",
     "@langchain/openai": "^0.1.1",
     "@prisma/client": "^5.14.0",
     "@radix-ui/react-avatar": "^1.0.4",
