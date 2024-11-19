@@ -22,8 +22,11 @@ export default function Header() {
     onError: (error) => {
       console.error('Failed to run scan:', error);
     },
-    
-  })
+    onSuccess: (data) => {
+      console.log(data)
+      setScanStatus(data.scanStatus);
+    }
+  });
 
 
   return (
@@ -39,9 +42,9 @@ export default function Header() {
             size="icon"
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
             onClick={() => runScanMutation.mutate()}
-            disabled={runScanMutation.isPending}
+            disabled={scanStatus?.status == 'InProgress'}
         >
-            <RefreshCw className={`h-5 w-5 ${runScanMutation.isPending ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-5 w-5 ${scanStatus?.status == 'InProgress' ? 'animate-spin' : ''}`} />
             <span className="sr-only">Refresh</span>
         </Button>
       </div>
