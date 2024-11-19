@@ -1,5 +1,5 @@
 import { ScanStatusType } from "@prisma/client";
-import { runScan } from "@/lib/runScanNew";
+import { runScan } from "@/lib/runScan";
 import { Prisma } from "@/lib/utils";
 
 const PRISMA = Prisma.getClient();
