@@ -1,10 +1,10 @@
 "use client";
 import { useWindow } from '@/context/WindowProvider';
-import { useColumn } from '@/context/ColumnProvider';
+import { useSelectedColumn } from '@/context/SelectedColumnProvider';
 import { useRouter } from 'next/navigation';
 
 interface ColumnItemProps {
-  id: Number;
+  id: number;
   name: string;
   tableName: string;
   datasetId: string;
@@ -14,15 +14,17 @@ interface ColumnItemProps {
 
 export function ColumnItem({ id, name, tableName, datasetId, confidenceScore, classification}: ColumnItemProps) {
   const { isMobile } = useWindow();
-  const { selectColumn } = useColumn();
+  const { selectColumn } = useSelectedColumn();
   const router = useRouter();
 
-  async function handleItemClick(columndId: Number) {
+  async function handleItemClick(columndId: number) {
     selectColumn(columndId);
+
     if(isMobile) {
       router.push(`/column/${columndId}`);
     }
   }
+
   return (
     <div onClick={() => handleItemClick(id)} className="group cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-4 flex items-start gap-4">
       <div className="flex-1">

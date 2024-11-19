@@ -2,14 +2,14 @@
 
 import * as React from "react";
 import { ColumnItem } from "./ColumnItem";
-import { useColumn } from "@/context/ColumnProvider";
+import { useColumnQuery } from "@/app/providers";
 
 export default function ColumnItemList() {  
-    const { columns } = useColumn();
+    const columnQuery = useColumnQuery();
     return(
       <div>
         <h2 className="text-xl font-bold mb-4">New Findings</h2>
-        {columns.map((column) => (
+        {columnQuery.data?.map((column) => (
           <ColumnItem 
             key={column.columnId}
             id={column.columnId}

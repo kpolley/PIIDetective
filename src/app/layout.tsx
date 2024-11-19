@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { ColumnProvider } from "@/context/ColumnProvider";
-import { WindowProvider } from "@/context/WindowProvider";
+// import { ColumnProvider } from "@/context/ColumnProvider";
+// import { WindowProvider } from "@/context/WindowProvider";
+import Providers from './providers'
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -20,12 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <WindowProvider>
-          <ColumnProvider>
-            <Header />
-            {children}
-          </ColumnProvider>
-        </WindowProvider>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -5,9 +5,11 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ColumnDetail } from "@/components/ColumnDetail";
 import { useWindow } from '@/context/WindowProvider';
-
+import { useSelectedColumn } from '@/context/SelectedColumnProvider';
 export default function Home() {
   const { isMobile, height } = useWindow();
+  const { selectedColumn } = useSelectedColumn();
+
 
   // mobile view
   if(isMobile) {
@@ -32,7 +34,7 @@ export default function Home() {
       <ResizableHandle />
       <ResizablePanel>
         <div className="pr-6 pl-6 pb-6 overflow-y-auto" style={{ height: height }}>
-            <ColumnDetail />
+            <ColumnDetail columnItem={selectedColumn}/>
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
