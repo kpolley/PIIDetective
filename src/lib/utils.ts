@@ -6,15 +6,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export class Prisma {
-  private static instance: PrismaClient;
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-  private constructor() {}
+export const prisma = globalForPrisma.prisma || new PrismaClient();
 
-  public static getClient(): PrismaClient {
-    if (!Prisma.instance) {
-      Prisma.instance = new PrismaClient();
-    }
-    return Prisma.instance;
-  }
-}
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

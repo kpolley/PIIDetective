@@ -19,7 +19,6 @@ export function ColumnItem({
   confidenceScore,
   classification,
 }: ColumnItemProps) {
-  
   const { selectColumn } = useSelectedColumn();
   const router = useRouter();
 

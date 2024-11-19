@@ -1,12 +1,11 @@
 import { ScanStatusType } from "@prisma/client";
 import { runScan } from "@/lib/runScan";
-import { Prisma } from "@/lib/utils";
-
-const PRISMA = Prisma.getClient();
+import { prisma } from "@/lib/utils";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   // Check if there is a scan in progress
-  const scanInProgress = await PRISMA.scanStatus.findFirst({
+  const scanInProgress = await prisma.scanStatus.findFirst({
     where: {
       status: ScanStatusType.InProgress,
     },
@@ -17,7 +16,7 @@ export async function GET() {
   }
 
   // Create new scan status
-  const scanStatus = await PRISMA.scanStatus.create({
+  const scanStatus = await prisma.scanStatus.create({
     data: {
       status: ScanStatusType.InProgress,
     },
@@ -26,7 +25,7 @@ export async function GET() {
   // Run the scan and update the status
   runScan()
     .then(async () => {
-      await PRISMA.scanStatus.update({
+      await prisma.scanStatus.update({
         where: { id: scanStatus.id },
         data: {
           status: ScanStatusType.Completed,
@@ -36,7 +35,7 @@ export async function GET() {
     .catch(async (error) => {
       console.error("Error running scan:", error);
 
-      await PRISMA.scanStatus.update({
+      await prisma.scanStatus.update({
         where: { id: scanStatus.id },
         data: {
           status: ScanStatusType.Failed,

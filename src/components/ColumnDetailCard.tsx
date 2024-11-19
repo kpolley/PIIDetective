@@ -54,23 +54,23 @@ export default function Component({
         <div className="grid gap-2">
           <div className="flex items-center justify-between">
             <span className="font-medium">Column Name:</span>
-            <span>{columnItem.column.name}</span>
+            <span className="ml-4">{columnItem.column.name}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium">Table Name:</span>
-            <span>{columnItem.column.tableName}</span>
+            <span className="ml-4">{columnItem.column.tableName}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium">Dataset ID:</span>
-            <span>{columnItem.column.datasetId}</span>
+            <span className="ml-4">{columnItem.column.datasetId}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium">Classification:</span>
-            <span>{columnItem.classification}</span>
+            <span className="ml-4">{columnItem.classification}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="font-medium">Confidence Score:</span>
-            <span>{columnItem.confidenceScore}</span>
+            <span className="ml-4">{columnItem.confidenceScore}</span>
           </div>
         </div>
       </CardContent>

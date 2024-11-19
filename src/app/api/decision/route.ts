@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Column } from "@prisma/client";
-import { Prisma } from "@/lib/utils";
+import { prisma } from "@/lib/utils";
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
 import config from "@/lib/config";
 
-const PRISMA = Prisma.getClient();
 const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
 export interface DecisionAPIBody {
   columnId: number;
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
     }
 
     // get column from db
-    const column: Column = await PRISMA.column.findFirstOrThrow({
+    const column: Column = await prisma.column.findFirstOrThrow({
       where: {
         id: Number(columnId),
       },
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
     );
 
     // save the decision to db
-    await PRISMA.policyTagDecision.create({
+    await prisma.policyTagDecision.create({
       data: {
         columnId: column.id,
         decision: decision === "accept",
