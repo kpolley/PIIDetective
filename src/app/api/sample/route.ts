@@ -1,4 +1,3 @@
-import config from "@/lib/config";
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
 export const dynamic = "force-dynamic";
 

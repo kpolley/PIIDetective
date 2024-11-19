@@ -1,6 +1,5 @@
 import { z } from "zod";
 import config from "@/lib/config";
-
 const TableData = z.object({
   tableName: z.string(),
   datasetId: z.string(),
