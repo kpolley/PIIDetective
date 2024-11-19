@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import ScanStatusIcon from "./ScanStatusIcon";
 import { Shield, RefreshCw } from "react-feather";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScanStatus } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { useColumnQuery } from "@/app/providers";
@@ -23,12 +23,16 @@ export default function Header() {
     onError: (error) => {
       console.error("Failed to run scan:", error);
     },
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: async (data) => {
       setScanStatus(data.scanStatus);
-      columnQuery.refetch();
     },
   });
+
+  useEffect(() => {
+    if (scanStatus?.status === 'Completed') {
+      columnQuery.refetch();
+    }
+  }, [scanStatus, columnQuery]);
 
   return (
     <header className="flex items-center justify-between bg-white px-4 py-3 my-1 text-gray-900 shadow-md dark:bg-gray-800 dark:text-white">

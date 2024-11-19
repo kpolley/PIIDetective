@@ -31,6 +31,7 @@
     "langchain": "^0.2.4",
     "lucide-react": "^0.390.0",
     "next": "14.2.10",
+    "openai": "^4.72.0",
     "p-queue": "^8.0.1",
     "react": "^18",
     "react-dom": "^18",
