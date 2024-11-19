@@ -1,11 +1,12 @@
 FROM node:20 AS base
 WORKDIR /app
-RUN npm i -g pnpm
 COPY package.json package-lock.json ./
 
 RUN npm install
 
 COPY . .
+
+RUN npm run prisma generate 
 
 RUN npm run build
 
