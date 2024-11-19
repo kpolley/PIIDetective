@@ -6,7 +6,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { WindowProvider } from "@/context/WindowProvider";
 import { SelectedColumnProvider } from "@/context/SelectedColumnProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -63,12 +62,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WindowProvider>
-        <SelectedColumnProvider>
-          {children}
-          <ReactQueryDevtools />
-        </SelectedColumnProvider>
-      </WindowProvider>
+      <SelectedColumnProvider>
+        {children}
+        <ReactQueryDevtools />
+      </SelectedColumnProvider>
     </QueryClientProvider>
   );
 }

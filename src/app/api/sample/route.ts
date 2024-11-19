@@ -19,7 +19,8 @@ export async function GET(request: Request) {
     const sampleData = await DATA_PLATFORM.getSampleData(datasetId, tableName);
     return new Response(JSON.stringify(sampleData), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = (error as Error).message;
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
     });
   }

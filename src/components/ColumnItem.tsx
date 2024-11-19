@@ -1,5 +1,4 @@
 "use client";
-import { useWindow } from "@/context/WindowProvider";
 import { useSelectedColumn } from "@/context/SelectedColumnProvider";
 import { useRouter } from "next/navigation";
 
@@ -20,21 +19,13 @@ export function ColumnItem({
   confidenceScore,
   classification,
 }: ColumnItemProps) {
-  const { isMobile } = useWindow();
+  
   const { selectColumn } = useSelectedColumn();
   const router = useRouter();
 
-  async function handleItemClick(columndId: number) {
-    selectColumn(columndId);
-
-    if (isMobile) {
-      router.push(`/column/${columndId}`);
-    }
-  }
-
   return (
     <div
-      onClick={() => handleItemClick(id)}
+      onClick={() => selectColumn(id)}
       className="group cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-4 flex items-start gap-4"
     >
       <div className="flex-1">
