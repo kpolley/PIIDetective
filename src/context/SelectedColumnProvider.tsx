@@ -15,6 +15,7 @@ const SelectedColumnContext = createContext<SelectedColumnContextType | undefine
 
 export const SelectedColumnProvider = ({ children }: { children: ReactNode }) => {
     const [selectedColumn, setSelectedColumn] = useState<ColumnClassificationIncludeColumn | null>(null);
+    const columnQuery = useColumnQuery();
 
     function selectColumn(columnID: number | null) {
         if(columnID === null) {
@@ -22,7 +23,6 @@ export const SelectedColumnProvider = ({ children }: { children: ReactNode }) =>
             return;
         }
         
-        const columnQuery = useColumnQuery();
         const selectedColumn = columnQuery.data?.find((column) => column.column.id === columnID);
         setSelectedColumn(selectedColumn || null);
     }

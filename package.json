@@ -22,6 +22,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^5.60.5",
+    "@tanstack/react-query-devtools": "^5.60.6",
     "@tanstack/react-table": "^8.17.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

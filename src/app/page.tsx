@@ -5,11 +5,11 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ColumnDetail } from "@/components/ColumnDetail";
 import { useWindow } from '@/context/WindowProvider';
-import { useState } from "react";
-
+import { useSelectedColumn } from '@/context/SelectedColumnProvider';
 export default function Home() {
   const { isMobile, height } = useWindow();
-  const [selectedColumn, setSelectedColumn] = useState(null);
+  const { selectedColumn } = useSelectedColumn();
+
 
   // mobile view
   if(isMobile) {
