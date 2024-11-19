@@ -1,9 +1,10 @@
-import config from "@/lib/config";
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
+export const dynamic = "force-dynamic";
 
-const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
 
 export async function GET(request: Request) {
+  const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
+
   const params = new URL(request.url).searchParams;
   const datasetId = params.get("datasetId");
   const tableName = params.get("tableName");
