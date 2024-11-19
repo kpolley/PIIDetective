@@ -4,6 +4,8 @@ import { prisma } from "@/lib/utils";
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
 import config from "@/lib/config";
 
+export const dynamic = "force-dynamic";
+
 const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
 export interface DecisionAPIBody {
   columnId: number;
