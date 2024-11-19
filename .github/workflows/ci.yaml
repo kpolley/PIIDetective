@@ -9,12 +9,10 @@
 
 name: Publish Docker image
 
-# on:
-#   release:
-#     types: [published]
-
 on:
   push:
+    branches:
+      - main
 
 jobs:
   push_to_registry:
