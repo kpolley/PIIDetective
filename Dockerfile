@@ -7,6 +7,7 @@ RUN npm install
 
 COPY . .
 
+RUN npm run prisma generate
 RUN npm run build
 
 FROM node:20-alpine3.19 AS release
