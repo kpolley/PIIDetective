@@ -1,5 +1,7 @@
 import { z } from "zod";
 import config from "@/lib/config";
+export const dynamic = "force-dynamic";
+
 const TableData = z.object({
   tableName: z.string(),
   datasetId: z.string(),
