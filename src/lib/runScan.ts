@@ -2,11 +2,10 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import { Classification, ConfidenceScore } from "@prisma/client";
-import { Prisma } from "./utils";
+import { prisma } from "@/lib/utils";
 import config from "@/lib/config";
 import { DataPlatform, TableDataType } from "@/dataplatforms/DataPlatform";
 
-const PRISMA = Prisma.getClient();
 const OPENAI = new OpenAI();
 
 const JSON_RESPONSE = z.object({
@@ -44,7 +43,7 @@ async function isAlreadyProcessed(
   tableName: string,
   datasetId: string,
 ): Promise<boolean> {
-  const existing = await PRISMA.column.findFirst({
+  const existing = await prisma.column.findFirst({
     where: {
       tableName: tableName,
       datasetId: datasetId,
@@ -90,7 +89,7 @@ export async function runScan() {
       }
 
       for (const columnClassification of columnClassifications.columns) {
-        const column = await PRISMA.column.create({
+        const column = await prisma.column.create({
           data: {
             name: columnClassification.columnName,
             tableName: columnClassification.tableName,
@@ -98,7 +97,7 @@ export async function runScan() {
           },
         });
 
-        await PRISMA.columnClassification.create({
+        await prisma.columnClassification.create({
           data: {
             columnId: column.id,
             classification: columnClassification.classification,

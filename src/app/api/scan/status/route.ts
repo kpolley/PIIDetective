@@ -1,9 +1,8 @@
-import { Prisma } from "@/lib/utils";
-
-const PRISMA = Prisma.getClient();
+import { prisma } from "@/lib/utils";
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const scanStatus = await PRISMA.scanStatus.findFirst({
+  const scanStatus = await prisma.scanStatus.findFirst({
     orderBy: { scanStart: "desc" },
   });
 

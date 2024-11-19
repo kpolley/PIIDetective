@@ -1,10 +1,9 @@
-import { Prisma } from "@/lib/utils";
-
-const PRISMA = Prisma.getClient();
+import { prisma } from "@/lib/utils";
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const columnsWithoutPolicyTag = await PRISMA.columnClassification.findMany({
+    const columnsWithoutPolicyTag = await prisma.columnClassification.findMany({
       where: {
         PolicyTagDecision: {
           none: {},
@@ -24,7 +23,5 @@ export async function GET() {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
-  } finally {
-    await PRISMA.$disconnect();
   }
 }
