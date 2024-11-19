@@ -2,9 +2,9 @@ import config from "@/lib/config";
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
 export const dynamic = "force-dynamic";
 
-const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
-
 export async function GET(request: Request) {
+  const data_platform: DataPlatform = DataPlatform.getInstance();
+
   const params = new URL(request.url).searchParams;
   const datasetId = params.get("datasetId");
   const tableName = params.get("tableName");
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const sampleData = await DATA_PLATFORM.getSampleData(datasetId, tableName);
+    const sampleData = await data_platform.getSampleData(datasetId, tableName);
     return new Response(JSON.stringify(sampleData), { status: 200 });
   } catch (error) {
     const errorMessage = (error as Error).message;
