@@ -1,8 +1,7 @@
 import { ScanStatusType } from "@prisma/client";
 import { runScan } from "@/lib/runScan";
 import { prisma } from "@/lib/utils";
-export const dynamic = 'force-dynamic';
-
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   // Check if there is a scan in progress

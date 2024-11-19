@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/utils";
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {

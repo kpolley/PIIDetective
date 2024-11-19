@@ -23,9 +23,7 @@ export default function Home() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          <div
-            className="pr-6 pl-6 pb-6"
-          >
+          <div className="pr-6 pl-6 pb-6">
             <ColumnDetail columnItem={selectedColumn} />
           </div>
         </ResizablePanel>
