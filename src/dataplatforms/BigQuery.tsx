@@ -26,22 +26,26 @@ export class BigQueryPlatform extends DataPlatform {
       .getTables();
 
     for (const table of tables) {
-      const schema: TableSchema | undefined = await table
-        .getMetadata()
-        .then(([data]: TableMetadata[]) => data.schema);
+      const [metadata]: TableMetadata[] = await table.getMetadata();
+      const schema: TableSchema | undefined = metadata.schema;
+      const lastModifiedTime = metadata.lastModifiedTime;
 
-      if (!table?.id || !schema?.fields) {
+      
+      
+      if (!table?.id || !schema?.fields || !lastModifiedTime) {
         continue;
-      }
+      }      
 
       yield {
         tableName: table.id,
         datasetId: datasetId,
+        
         columns: schema.fields
           .filter(
             (field): field is { name: string } => field.name !== undefined,
           )
           .map((field) => field.name),
+        lastModifiedTime: new Date(+lastModifiedTime),
       };
     }
   }

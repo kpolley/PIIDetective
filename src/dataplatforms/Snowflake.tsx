@@ -96,6 +96,7 @@ export class SnowflakePlatform extends DataPlatform {
         tableName: table.name,
         datasetId: datasetId,
         columns: columns.map((column) => column.name),
+        lastModifiedTime: new Date(), // TODO: get last modified time
       };
     }
   }

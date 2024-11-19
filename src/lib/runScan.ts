@@ -45,15 +45,21 @@ function formatTable(table: TableDataType): string {
 async function isAlreadyProcessed(
   tableName: string,
   datasetId: string,
+  lastModifiedTime: Date,
 ): Promise<boolean> {
-  const existing = await prisma.column.findFirst({
+
+  const existing = await prisma.tableHistory.findFirst({
     where: {
-      tableName: tableName,
-      datasetId: datasetId,
+      tableName,
+      datasetId,
     },
   });
 
-  return existing !== null;
+  if (!existing) {
+    return false;
+  }
+
+  return existing.lastScanTimestamp >= lastModifiedTime;
 }
 
 export async function runScan() {
@@ -75,11 +81,12 @@ export async function runScan() {
     }
 
     for await (const table of DATA_PLATFORM.getDatasetTables(datasetId)) {
-      if (await isAlreadyProcessed(table.tableName, table.datasetId)) {
+      if (await isAlreadyProcessed(table.tableName, table.datasetId, table.lastModifiedTime)) {
         continue;
       }
       const formattedTable: string = formatTable(table);
 
+      console.log(`Scanning table ${table.tableName}`);
       const completion = await OPENAI.beta.chat.completions.parse({
         model: "gpt-4o-2024-08-06",
         messages: [
@@ -91,24 +98,56 @@ export async function runScan() {
 
       const columnClassifications = completion.choices[0].message.parsed;
       if (!columnClassifications) {
-        console.error("No column classifications where found in response");
+        console.error(`Failed to parse response for table ${table.tableName}`);
         continue;
       }
 
       for (const columnClassification of columnClassifications.columns) {
-        const column = await prisma.column.create({
-          data: {
+        const column = await prisma.column.upsert({
+          where: {
+            name_tableName_datasetId: {
+              name: columnClassification.columnName,
+              tableName: table.tableName,
+              datasetId: table.datasetId,
+            },
+          },
+          update: {},
+          create: {
             name: columnClassification.columnName,
-            tableName: columnClassification.tableName,
-            datasetId: columnClassification.datasetId,
+            tableName: table.tableName,
+            datasetId: table.datasetId,
           },
         });
 
-        await prisma.columnClassification.create({
-          data: {
+        await prisma.columnClassification.upsert({
+          where: {
             columnId: column.id,
+          },
+          update: {
             classification: columnClassification.classification,
             confidenceScore: columnClassification.confidenceScore,
+          },
+          create: {
+            classification: columnClassification.classification,
+            confidenceScore: columnClassification.confidenceScore,
+            columnId: column.id,
+          },
+        });
+
+        await prisma.tableHistory.upsert({
+          where: {
+            tableName_datasetId: {
+              tableName: table.tableName,
+              datasetId: table.datasetId,
+            },
+          },
+          update: {
+            lastScanTimestamp: new Date(),
+          },
+          create: {
+            tableName: table.tableName,
+            datasetId: table.datasetId,
+            lastScanTimestamp: new Date(),
           },
         });
       }
