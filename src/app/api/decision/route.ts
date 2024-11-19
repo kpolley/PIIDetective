@@ -6,13 +6,13 @@ import config from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
 export interface DecisionAPIBody {
   columnId: number;
   decision: "accept" | "reject";
 }
 
 export async function POST(req: NextRequest) {
+  const data_platform: DataPlatform = DataPlatform.getInstance();
   try {
     const { columnId, decision }: DecisionAPIBody = await req.json();
 
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    DATA_PLATFORM.applyPolicyTag(
+    data_platform.applyPolicyTag(
       column.datasetId,
       column.tableName,
       column.name,
