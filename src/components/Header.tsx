@@ -29,7 +29,7 @@ export default function Header() {
   });
 
   useEffect(() => {
-    if (scanStatus?.status === 'Completed') {
+    if (scanStatus?.status === "Completed") {
       columnQuery.refetch();
     }
   }, [scanStatus, columnQuery]);
