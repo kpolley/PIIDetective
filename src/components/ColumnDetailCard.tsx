@@ -13,7 +13,6 @@ import {
   useColumnQuery,
   ColumnClassificationIncludeColumn,
 } from "@/app/providers";
-import { useMutation } from "@tanstack/react-query";
 
 export default function Component({
   columnItem,
@@ -21,22 +20,6 @@ export default function Component({
   columnItem: ColumnClassificationIncludeColumn | null;
 }) {
   const columnQuery = useColumnQuery();
-  const removeColumnMutation = useMutation({
-    mutationFn: async (columnId: number) => {
-      const response = await fetch(`/api/columns/${columnId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      return response.json();
-    },
-    onSuccess: () => {
-      columnQuery.refetch();
-    },
-  });
 
   async function callDecisionApi({ columnId, decision }: DecisionAPIBody) {
     try {
@@ -52,8 +35,7 @@ export default function Component({
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      await response.json();
-      removeColumnMutation.mutate(columnId);
+      columnQuery.refetch();
     } catch (error) {
       console.error("Failed apply decision:", error);
     }

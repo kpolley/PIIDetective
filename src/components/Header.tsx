@@ -6,9 +6,11 @@ import { Shield, RefreshCw } from "react-feather";
 import { useState } from "react";
 import { ScanStatus } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
+import { useColumnQuery } from "@/app/providers";
 
 export default function Header() {
   const [scanStatus, setScanStatus] = useState<ScanStatus | null>(null);
+  const columnQuery = useColumnQuery();
 
   const runScanMutation = useMutation({
     mutationFn: async () => {
@@ -24,6 +26,7 @@ export default function Header() {
     onSuccess: (data) => {
       console.log(data);
       setScanStatus(data.scanStatus);
+      columnQuery.refetch();
     },
   });
 
