@@ -46,6 +46,9 @@ model Column {
   tableName   String
   datasetId   String
   classifications ColumnClassification[]
+
+  @@unique([name, tableName, datasetId])
+  @@map("columns")
 }
 
 model ColumnClassification {
@@ -55,6 +58,9 @@ model ColumnClassification {
   classification   Classification
   confidenceScore  ConfidenceScore
   PolicyTagDecision PolicyTagDecision[]
+
+  @@unique([columnId])
+  @@map("column_classifications")
 }
 
 model PolicyTagDecision {
@@ -63,6 +69,8 @@ model PolicyTagDecision {
   decision          Boolean
   decisionTimestamp DateTime @default(now())
   ColumnClassification ColumnClassification @relation(fields: [columnId], references: [id], onDelete: Cascade)
+
+  @@map("policy_tag_decisions")
 }
 
 model ScanStatus {
@@ -70,4 +78,16 @@ model ScanStatus {
   status      ScanStatusType
   scanStart   DateTime @default(now())
   scanEnd     DateTime?
+
+  @@map("scan_status")
+}
+
+model TableHistory {
+  id                    Int @id @default(autoincrement())
+  tableName             String
+  datasetId             String
+  lastScanTimestamp     DateTime
+  
+  @@unique([tableName, datasetId])
+  @@map("table_history")
 }

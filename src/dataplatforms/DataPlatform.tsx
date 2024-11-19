@@ -4,6 +4,7 @@ const TableData = z.object({
   tableName: z.string(),
   datasetId: z.string(),
   columns: z.array(z.string()),
+  lastModifiedTime: z.date(),
 });
 
 export type TableDataType = z.infer<typeof TableData>;
