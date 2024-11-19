@@ -1,11 +1,10 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { PrismaClient } from '@prisma/client';
-import { BigQueryPlatform } from '@/dataplatforms/BigQuery';
-
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { PrismaClient } from "@prisma/client";
+import { BigQueryPlatform } from "@/dataplatforms/BigQuery";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export class Prisma {

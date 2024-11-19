@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface WindowContextProps {
   width: number;
@@ -10,7 +10,9 @@ interface WindowContextProps {
 
 const WindowContext = createContext<WindowContextProps | undefined>(undefined);
 
-const WindowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const WindowProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [windowSize, setWindowSize] = useState<WindowContextProps>({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -26,8 +28,8 @@ const WindowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
       });
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -40,7 +42,7 @@ const WindowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
 const useWindow = (): WindowContextProps => {
   const context = useContext(WindowContext);
   if (context === undefined) {
-    throw new Error('useWindow must be used within a WindowProvider');
+    throw new Error("useWindow must be used within a WindowProvider");
   }
   return context;
 };

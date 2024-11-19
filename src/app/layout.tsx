@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 // import { ColumnProvider } from "@/context/ColumnProvider";
 // import { WindowProvider } from "@/context/WindowProvider";
-import Providers from './providers'
+import Providers from "./providers";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";

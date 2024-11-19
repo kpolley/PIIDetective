@@ -1,7 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ColumnItem } from "./ColumnItem";
@@ -15,10 +19,10 @@ export default function Inbox() {
   const { selectedColumn, selectColumn } = useSelectedColumn();
   const columnQuery = useColumnQuery();
   const { isMobile } = useWindow();
-  
-  if(isMobile) {
+
+  if (isMobile) {
     if (selectedColumn) {
-      return(
+      return (
         <div>
           <div className="p-6">
             <Button onClick={() => selectColumn(null)}>Back</Button>
@@ -27,22 +31,20 @@ export default function Inbox() {
             <ColumnDetail columnItem={selectedColumn} />
           </ScrollArea>
         </div>
-      )
+      );
     }
 
-    return(
-      <ColumnItemList />
-    )
+    return <ColumnItemList />;
   }
 
-  return(
+  return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel defaultSize={30} minSize={10} maxSize={200}>
         <ScrollArea className="h-full">
           <div className="p-4">
             <h2 className="text-xl font-bold mb-4">New Findings</h2>
             {columnQuery.data?.map((column) => (
-              <ColumnItem 
+              <ColumnItem
                 key={column.columnId}
                 id={column.columnId}
                 name={column.column.name}
@@ -58,11 +60,11 @@ export default function Inbox() {
       <ResizableHandle />
       <ResizablePanel>
         {selectedColumn ? (
-            <ColumnDetail columnItem={selectedColumn} />
+          <ColumnDetail columnItem={selectedColumn} />
         ) : (
           <div className="p-4">Select an item to view details</div>
         )}
       </ResizablePanel>
     </ResizablePanelGroup>
-  )
+  );
 }
