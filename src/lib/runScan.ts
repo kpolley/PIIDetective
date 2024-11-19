@@ -1,70 +1,43 @@
-import { OpenAI } from "@langchain/openai";
-import { StructuredOutputParser } from "langchain/output_parsers";
-import { PromptTemplate } from "@langchain/core/prompts";
+import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { z } from "zod";
 import { Classification, ConfidenceScore } from "@prisma/client";
-import { Prisma } from "@/lib/utils";
-import PQueue from "p-queue";
-import * as z from "zod";
+import { Prisma } from "./utils";
 import config from "@/lib/config";
 import { DataPlatform, TableDataType } from "@/dataplatforms/DataPlatform";
 
 const PRISMA = Prisma.getClient();
+const OPENAI = new OpenAI();
 
-const LLM = new OpenAI({
-  modelName: "gpt-4o",
-  verbose: true,
+const JSON_RESPONSE = z.object({
+  columns: z.array(
+    z.object({
+      columnName: z.string(),
+      tableName: z.string(),
+      datasetId: z.string(),
+      classification: z.nativeEnum(Classification),
+      confidenceScore: z.nativeEnum(ConfidenceScore),
+    }),
+  ),
 });
 
-const PROMPT = `Identify any potential Personal Identifiable Information (PII) in the following table schema.
+const SYSTEM_PROMPT = `Identify any potential Personal Identifiable Information (PII) in the following table schema.
 Try to discover any columns that may contain PII and classify them accordingly, even if they are not explicitly labeled as PII.
-Do not classify columns that are not likely related to an individual, such as names or addresses for businesses or public entities.
-
-{format_instructions}
-
-{content}`;
-
-const JSON_RESPONSE = z.array(
-  z.object({
-    columnName: z.string(),
-    tableName: z.string(),
-    datasetId: z.string(),
-    classification: z.nativeEnum(Classification),
-    confidenceScore: z.nativeEnum(ConfidenceScore),
-  }),
-);
-
-type JsonResponseType = z.infer<typeof JSON_RESPONSE>;
-
-const PARSER = StructuredOutputParser.fromZodSchema(JSON_RESPONSE);
-
-const PROMPT_TEMPLATE = new PromptTemplate({
-  template: PROMPT,
-  inputVariables: ["content"],
-  partialVariables: {
-    format_instructions: PARSER.getFormatInstructions(),
-  },
-});
-
-const CHAIN = PROMPT_TEMPLATE.pipe(LLM).pipe(PARSER);
-
-const QUEUE = new PQueue({
-  interval: 60000, // 60 seconds
-  intervalCap: 60, // 60 invocations per interval
-});
+Do not classify columns that are not likely related to an individual, such as names or addresses for businesses or public entities.`;
 
 function formatTable(table: TableDataType): string {
   const docTemplate = `
-        Table Name: <tableName>
-        Dataset ID: <datasetId>
-
-        Schema:
-        <pageContent>
-    `;
+          Table Name: <tableName>
+          Dataset ID: <datasetId>
+  
+          Schema:
+          <columns>
+      `;
 
   return docTemplate
     .replace("<tableName>", table.tableName)
     .replace("<datasetId>", table.datasetId)
-    .replace("<pageContent>", table.columns.join("\n"));
+    .replace("<columns>", table.columns.join("\n"));
 }
 
 async function isAlreadyProcessed(
@@ -99,19 +72,29 @@ export async function runScan() {
       if (await isAlreadyProcessed(table.tableName, table.datasetId)) {
         continue;
       }
-
       const formattedTable: string = formatTable(table);
-      const columnClassifications: JsonResponseType = (await QUEUE.add(() =>
-        CHAIN.invoke({ content: formattedTable }),
-      )) as JsonResponseType;
 
-      // Save the results to the database
-      for (const columnClassification of columnClassifications) {
+      const completion = await OPENAI.beta.chat.completions.parse({
+        model: "gpt-4o-2024-08-06",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: formattedTable },
+        ],
+        response_format: zodResponseFormat(JSON_RESPONSE, "columns"),
+      });
+
+      const columnClassifications = completion.choices[0].message.parsed;
+      if (!columnClassifications) {
+        console.error("No column classifications where found in response");
+        continue;
+      }
+
+      for (const columnClassification of columnClassifications.columns) {
         const column = await PRISMA.column.create({
           data: {
             name: columnClassification.columnName,
-            tableName: table.tableName,
-            datasetId: table.datasetId,
+            tableName: columnClassification.tableName,
+            datasetId: columnClassification.datasetId,
           },
         });
 
