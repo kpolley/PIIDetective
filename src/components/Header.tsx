@@ -4,33 +4,27 @@ import { Button } from "@/components/ui/button"
 import ScanStatusIcon from "./ScanStatusIcon"
 import { Shield, RefreshCw } from "react-feather";
 import { useState } from "react";
-import { useColumn } from "@/context/ColumnProvider";
 import { ScanStatus } from '@prisma/client';
+import { useMutation } from "@tanstack/react-query";
+
 
 export default function Header() {
-  const [loading, setLoading] = useState(false);
-  const { getColumns } = useColumn();
   const [scanStatus, setScanStatus] = useState<ScanStatus | null>(null);
-  
-  async function runScan() {
-    try {
-        setLoading(true);
-        const response = await fetch('/api/scan');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
 
-        const data = await response.json();
-        setScanStatus(data.scanStatus);
+  const runScanMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/scan');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    },
+    onError: (error) => {
+      console.error('Failed to run scan:', error);
+    },
+    
+  })
 
-    } catch (error) {
-        console.error('Failed to run scan:', error);
-        return null;
-    }
-
-    await getColumns();
-    setLoading(false);
-  } 
 
   return (
     <header className="flex items-center justify-between bg-white px-4 py-3 my-1 text-gray-900 shadow-md dark:bg-gray-800 dark:text-white">
@@ -44,10 +38,10 @@ export default function Header() {
             variant="ghost"
             size="icon"
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-            onClick={() => runScan()}
-            disabled={loading}
+            onClick={() => runScanMutation.mutate()}
+            disabled={runScanMutation.isPending}
         >
-            <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-5 w-5 ${runScanMutation.isPending ? 'animate-spin' : ''}`} />
             <span className="sr-only">Refresh</span>
         </Button>
       </div>
