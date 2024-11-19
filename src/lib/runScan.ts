@@ -3,10 +3,9 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import { Classification, ConfidenceScore } from "@prisma/client";
 import { prisma } from "@/lib/utils";
-import config from "@/lib/config";
 import { DataPlatform, TableDataType } from "@/dataplatforms/DataPlatform";
 
-const OPENAI = new OpenAI();
+export const dynamic = "force-dynamic";
 
 const JSON_RESPONSE = z.object({
   columns: z.array(
@@ -24,6 +23,10 @@ const SYSTEM_PROMPT = `Identify any potential Personal Identifiable Information 
 Try to discover any columns that may contain PII and classify them accordingly, even if they are not explicitly labeled as PII.
 Do not classify columns that are not likely related to an individual, such as names or addresses for businesses or public entities.`;
 
+const EXCLUDE_DATASET_NAMES: string[] =
+  process.env.EXCLUDE_DATASET_NAMES?.split(",") || [];
+const INCLUDE_DATASET_NAMES: string[] =
+  process.env.INCLUDE_DATASET_NAMES?.split(",") || [];
 function formatTable(table: TableDataType): string {
   const docTemplate = `
           Table Name: <tableName>
@@ -54,20 +57,24 @@ async function isAlreadyProcessed(
 }
 
 export async function runScan() {
-  const dataPlatform = DataPlatform.getInstance();
-  const datasets: string[] = await dataPlatform.getDatasets();
+  const DATA_PLATFORM = DataPlatform.getInstance();
+  const OPENAI = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
+
+  const datasets: string[] = await DATA_PLATFORM.getDatasets();
   for (const datasetId of datasets) {
     if (
       !datasetId ||
-      (config.EXCLUDE_DATASET_NAMES.length > 0 &&
-        config.EXCLUDE_DATASET_NAMES.includes(datasetId)) ||
-      (config.INCLUDE_DATASET_NAMES.length > 0 &&
-        !config.INCLUDE_DATASET_NAMES.includes(datasetId))
+      (EXCLUDE_DATASET_NAMES.length > 0 &&
+        EXCLUDE_DATASET_NAMES.includes(datasetId)) ||
+      (INCLUDE_DATASET_NAMES.length > 0 &&
+        !INCLUDE_DATASET_NAMES.includes(datasetId))
     ) {
       continue;
     }
 
-    for await (const table of dataPlatform.getDatasetTables(datasetId)) {
+    for await (const table of DATA_PLATFORM.getDatasetTables(datasetId)) {
       if (await isAlreadyProcessed(table.tableName, table.datasetId)) {
         continue;
       }

@@ -5,7 +5,6 @@ import {
   RowStatement,
   FileAndStageBindStatement,
 } from "snowflake-sdk";
-import config from "@/lib/config";
 
 interface ConnectionConfig {
   account: string;
@@ -60,9 +59,9 @@ class SnowflakeService {
 }
 
 const snowflakeClient = new SnowflakeService({
-  account: config.SNOWFLAKE_ACCOUNT!,
-  username: config.SNOWFLAKE_USERNAME!,
-  password: config.SNOWFLAKE_PASSWORD!,
+  account: process.env.SNOWFLAKE_ACCOUNT!,
+  username: process.env.SNOWFLAKE_USERNAME!,
+  password: process.env.SNOWFLAKE_PASSWORD!,
 });
 
 export class SnowflakePlatform extends DataPlatform {

@@ -6,10 +6,9 @@ import {
   TableSchema,
   TableField,
 } from "@google-cloud/bigquery";
-import config from "@/lib/config";
 
 export const bigQueryClient = new BigQuery({
-  projectId: config.GCP_PROJECT_ID,
+  projectId: process.env.GCP_PROJECT_ID,
 });
 
 export class BigQueryPlatform extends DataPlatform {

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import config from "@/lib/config";
 
 const TableData = z.object({
   tableName: z.string(),
@@ -16,7 +15,7 @@ export abstract class DataPlatform {
 
   public static getInstance(): DataPlatform {
     if (!DataPlatform.instance) {
-      switch (config.DATA_PLATFORM) {
+      switch (process.env.DATA_PLATFORM) {
         case "bigquery":
           const { BigQueryPlatform } = require("./BigQuery");
           DataPlatform.instance = new BigQueryPlatform();

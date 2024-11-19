@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { Column } from "@prisma/client";
 import { prisma } from "@/lib/utils";
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
-import config from "@/lib/config";
 
-const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
 export interface DecisionAPIBody {
   columnId: number;
   decision: "accept" | "reject";
 }
 
 export async function POST(req: NextRequest) {
+  const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
+
   try {
     const { columnId, decision }: DecisionAPIBody = await req.json();
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       column.datasetId,
       column.tableName,
       column.name,
-      config.PII_POLICY_TAG_ID,
+      process.env.POLICY_TAG_ID!,
     );
 
     // save the decision to db
