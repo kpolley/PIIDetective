@@ -23,8 +23,10 @@ const SYSTEM_PROMPT = `Identify any potential Personal Identifiable Information 
 Try to discover any columns that may contain PII and classify them accordingly, even if they are not explicitly labeled as PII.
 Do not classify columns that are not likely related to an individual, such as names or addresses for businesses or public entities.`;
 
-const EXCLUDE_DATASET_NAMES: string[] = process.env.EXCLUDE_DATASET_NAMES?.split(',') || [];
-const INCLUDE_DATASET_NAMES: string[] = process.env.INCLUDE_DATASET_NAMES?.split(',') || [];
+const EXCLUDE_DATASET_NAMES: string[] =
+  process.env.EXCLUDE_DATASET_NAMES?.split(",") || [];
+const INCLUDE_DATASET_NAMES: string[] =
+  process.env.INCLUDE_DATASET_NAMES?.split(",") || [];
 function formatTable(table: TableDataType): string {
   const docTemplate = `
           Table Name: <tableName>
@@ -59,7 +61,7 @@ export async function runScan() {
   const OPENAI = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY!,
   });
-  
+
   const datasets: string[] = await DATA_PLATFORM.getDatasets();
   for (const datasetId of datasets) {
     if (

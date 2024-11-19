@@ -10,7 +10,7 @@ export interface DecisionAPIBody {
 
 export async function POST(req: NextRequest) {
   const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
-  
+
   try {
     const { columnId, decision }: DecisionAPIBody = await req.json();
 

@@ -1,7 +1,6 @@
 import { DataPlatform } from "@/dataplatforms/DataPlatform";
 export const dynamic = "force-dynamic";
 
-
 export async function GET(request: Request) {
   const DATA_PLATFORM: DataPlatform = DataPlatform.getInstance();
 
