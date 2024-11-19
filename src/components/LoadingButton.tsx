@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { CheckCircle, Loader } from 'react-feather';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { CheckCircle, Loader } from "react-feather";
 
 interface LoadingButtonProps {
   onClick: () => Promise<void>;
   className?: string;
-  children: React.ReactNode; 
+  children: React.ReactNode;
   [key: string]: any;
 }
 
-export default function LoadingButton({ onClick, className, children, ...props }: LoadingButtonProps) {
+export default function LoadingButton({
+  onClick,
+  className,
+  children,
+  ...props
+}: LoadingButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
@@ -36,4 +41,4 @@ export default function LoadingButton({ onClick, className, children, ...props }
       )}
     </Button>
   );
-};
+}
