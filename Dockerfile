@@ -1,6 +1,5 @@
 FROM node:20 AS base
 WORKDIR /app
-RUN npm i -g pnpm
 COPY package.json package-lock.json ./
 
 RUN npm install
@@ -20,4 +19,4 @@ COPY --from=base /app/prisma ./prisma
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm run prisma migrate deploy && npm start"]
