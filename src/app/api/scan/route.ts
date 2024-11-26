@@ -43,5 +43,32 @@ export async function GET() {
       });
     });
 
+  if (process.env.NEXT_MANUAL_SIG_HANDLE) {
+    process.on('SIGTERM', async () => {
+      console.log('Received SIGTERM: cleaning up')
+      
+      // mark the scan as failed
+      await prisma.scanStatus.update({
+        where: { id: scanStatus.id },
+        data: {
+          status: ScanStatusType.Failed,
+        },
+      })
+      process.exit(0)
+    })
+  
+    process.on('SIGINT', async () => {
+      console.log('Received SIGINT: cleaning up')
+       // mark the scan as failed
+       await prisma.scanStatus.update({
+        where: { id: scanStatus.id },
+        data: {
+          status: ScanStatusType.Failed,
+        },
+      })
+      process.exit(0)
+    })
+  }
+
   return Response.json({ scanStatus });
 }
