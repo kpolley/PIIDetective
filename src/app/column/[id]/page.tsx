@@ -1,10 +1,12 @@
-"use client";
+"use client";;
+import { use } from "react";
 import { useColumnQuery } from "@/app/providers";
 import { ColumnDetail } from "@/components/ColumnDetail";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const columnQuery = useColumnQuery();
   const router = useRouter();
 
