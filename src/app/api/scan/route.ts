@@ -43,7 +43,6 @@ export async function GET() {
       });
     });
 
-  if (process.env.NEXT_MANUAL_SIG_HANDLE) {
     process.on('SIGTERM', async () => {
       console.log('Received SIGTERM: cleaning up')
       
@@ -68,7 +67,6 @@ export async function GET() {
       })
       process.exit(0)
     })
-  }
 
   return Response.json({ scanStatus });
 }
