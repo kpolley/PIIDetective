@@ -7,12 +7,14 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import LoadingButton from "./LoadingButton";
-import { DecisionAPIBody } from "@/app/api/decision/route";
+import { Button } from "@/components/ui/button";
+import { Loader2, CircleCheckBig } from "lucide-react"
+import { useEffect } from "react";
 import {
   useColumnQuery,
   ColumnClassificationIncludeColumn,
 } from "@/app/providers";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Component({
   columnItem,
@@ -20,26 +22,53 @@ export default function Component({
   columnItem: ColumnClassificationIncludeColumn | null;
 }) {
   const columnQuery = useColumnQuery();
-
-  async function callDecisionApi({ columnId, decision }: DecisionAPIBody) {
-    try {
+  const acceptDecisionMutation = useMutation({
+    mutationFn: async (columnId: number) =>{
       const response = await fetch(`/api/decision`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ columnId, decision }),
+        body: JSON.stringify({ columnId, decision: "accept" }),
       });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-
+    },
+    onSuccess: () => {
       columnQuery.refetch();
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Failed apply decision:", error);
     }
-  }
+  });
+  const rejectDecisionMutation = useMutation({
+    mutationFn: async (columnId: number) =>{
+      const response = await fetch(`/api/decision`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ columnId, decision: "reject" }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+    },
+    onSuccess: () => {
+      columnQuery.refetch();
+    },
+    onError: (error) => {
+      console.error("Failed apply decision:", error);
+    }
+  });
+
+  useEffect(() => {
+    acceptDecisionMutation.reset();
+    rejectDecisionMutation.reset();
+  }, [columnItem]);
 
   if (!columnItem) {
     return null;
@@ -75,29 +104,27 @@ export default function Component({
         </div>
       </CardContent>
       <CardFooter className="flex space-x-2">
-        <LoadingButton
-          onClick={() =>
-            callDecisionApi({
-              columnId: columnItem.columnId,
-              decision: "accept",
-            } as DecisionAPIBody)
-          }
+        <Button
+          onClick={() => acceptDecisionMutation.mutate(columnItem.columnId)}
+          disabled={acceptDecisionMutation.isPending || rejectDecisionMutation.isPending}
           className="w-full"
         >
-          Accept
-        </LoadingButton>
-        <LoadingButton
-          onClick={() =>
-            callDecisionApi({
-              columnId: columnItem.columnId,
-              decision: "reject",
-            } as DecisionAPIBody)
+          {acceptDecisionMutation.isPending ? 
+            <Loader2 className="animate-spin"/> : acceptDecisionMutation.isSuccess ?
+              <CircleCheckBig /> : "Accept"
           }
-          variant="destructive"
+        </Button>
+        <Button
+          onClick={() => rejectDecisionMutation.mutate(columnItem.columnId)}
+          disabled={rejectDecisionMutation.isPending || acceptDecisionMutation.isPending}
           className="w-full"
+          variant={"destructive"}
         >
-          Reject
-        </LoadingButton>
+          {rejectDecisionMutation.isPending ? 
+            <Loader2 className="animate-spin"/> : rejectDecisionMutation.isSuccess ?
+              <CircleCheckBig /> : "Reject"
+          }
+        </Button>
       </CardFooter>
     </Card>
   );
