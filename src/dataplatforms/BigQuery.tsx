@@ -26,14 +26,15 @@ export class BigQueryPlatform extends DataPlatform {
       .getTables();
 
     for (const table of tables) {
-      if (table.metadata?.type !== "TABLE") {
-        continue;
-      }
       const [metadata]: TableMetadata[] = await table.getMetadata();
       const schema: TableSchema | undefined = metadata.schema;
       const lastModifiedTime = metadata.lastModifiedTime;
       
       if (!table?.id || !schema?.fields || !lastModifiedTime) {
+        continue;
+      }
+
+      if (metadata.type !== "TABLE") {
         continue;
       }
       
