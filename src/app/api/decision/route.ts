@@ -44,11 +44,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    DATA_PLATFORM.applyPolicyTag(
+    await DATA_PLATFORM.applyPolicyTag(
       column.datasetId,
       column.tableName,
       column.name,
-      process.env.POLICY_TAG_ID!,
+      process.env.PII_POLICY_TAG_ID!,
     );
 
     // save the decision to db

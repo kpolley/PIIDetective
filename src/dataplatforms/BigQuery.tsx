@@ -11,6 +11,19 @@ export const bigQueryClient = new BigQuery({
   projectId: process.env.GCP_PROJECT_ID,
 });
 
+  // Helper function to flatten RECORD fields
+  function flattenFields(fields: TableField[], prefix = ''): string[] {
+    return fields.flatMap(field => {
+      const fieldType = field.type;
+      if (fieldType === 'RECORD') {
+        const recordFields = field.fields || [];
+        return flattenFields(recordFields, `${prefix}${field.name}.`);
+      } else {
+        return [`${prefix}${field.name}`];
+      }
+    });
+  }
+
 export class BigQueryPlatform extends DataPlatform {
   async getDatasets(): Promise<string[]> {
     const [datasets] = await bigQueryClient.getDatasets();
@@ -39,12 +52,7 @@ export class BigQueryPlatform extends DataPlatform {
       yield {
         tableName: table.id,
         datasetId: datasetId,
-        
-        columns: schema.fields
-          .filter(
-            (field): field is { name: string } => field.name !== undefined,
-          )
-          .map((field) => field.name),
+        columns: flattenFields(schema.fields),
         lastModifiedTime: new Date(+lastModifiedTime),
       };
     }
@@ -78,7 +86,10 @@ export class BigQueryPlatform extends DataPlatform {
       return field;
     });
 
-    tableRef.setMetadata({ schema: { fields: newSchema } });
+    const resp = await tableRef.setMetadata({ schema: { fields: newSchema } });
+    if (!resp || resp.statusCode !== 200) {
+      throw new Error("Failed to apply policy tag");
+    }
   }
 
   async getSampleData(datasetId: string, tableName: string): Promise<any[]> {
