@@ -44,12 +44,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    await DATA_PLATFORM.applyPolicyTag(
-      column.datasetId,
-      column.tableName,
-      column.name,
-      process.env.PII_POLICY_TAG_ID!,
-    );
+    if(decision === "accept") {
+      await DATA_PLATFORM.applyPolicyTag(
+        column.datasetId,
+        column.tableName,
+        column.name,
+        process.env.PII_POLICY_TAG_ID!,
+      );
+    }
 
     // save the decision to db
     await prisma.policyTagDecision.create({
