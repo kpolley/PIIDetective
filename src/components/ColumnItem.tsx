@@ -30,15 +30,15 @@ export function ColumnItem({
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div className="font-medium">{name}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            {confidenceScore}
-          </div>
         </div>
         <div className="text-sm font-medium">
           {datasetId}.{tableName}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-          {classification}
+          Classification: {classification}
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+        Confidence: {confidenceScore}
         </p>
       </div>
     </div>

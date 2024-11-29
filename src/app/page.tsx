@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div>
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={30} minSize={10} maxSize={200}>
+        <ResizablePanel defaultSize={30} minSize={10} maxSize={50}>
           <ScrollArea className="h-screen">
             <ColumnItemList />
           </ScrollArea>
