@@ -68,7 +68,7 @@ model PolicyTagDecision {
   columnId          Int
   decision          Boolean
   decisionTimestamp DateTime @default(now())
-  ColumnClassification ColumnClassification @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  ColumnClassification ColumnClassification @relation(fields: [columnId], references: [columnId], onDelete: Cascade)
 
   @@map("policy_tag_decisions")
 }
